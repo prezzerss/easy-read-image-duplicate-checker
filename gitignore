@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual env
+.venv/
+venv/
+
+# macOS
+.DS_Store
+
+# Build outputs
+build/
+dist/
+*.app
+*.spec
+
+# Temp exports / caches
+*.log
+*.tmp
+
+# Large model caches (optional)
+.cache/

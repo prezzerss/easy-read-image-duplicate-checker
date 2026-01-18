@@ -1,0 +1,12 @@
+pymupdf>=1.23
+pillow>=10.0
+numpy>=1.26
+pandas>=2.1
+tqdm>=4.66
+
+# AI embeddings
+torch>=2.1
+open_clip_torch>=2.24
+
+# Optional: drag-and-drop support in Tkinter UI
+tkinterdnd2>=0.3.0
