@@ -4,11 +4,12 @@ import tkinter as tk
 import tkinter.font as tkfont
 from tkinter import ttk, filedialog, messagebox
 from PIL import ImageTk
+from tkinterdnd2 import TkinterDnD, DND_FILES
 
 from checker_core import run_checker
 
 
-class DuplicateCheckerApp(tk.Tk):
+class DuplicateCheckerApp(TkinterDnD.Tk):
     # Brand colours
     TEAL = "#04979e"
     RED = "#ea4e1d"
@@ -28,7 +29,7 @@ class DuplicateCheckerApp(tk.Tk):
 
         self.geometry("980x620")
         self.minsize(860, 520)
-        self.title("Easy Read Online – AI Duplicate Image Checker")
+        self.title("AI Duplicate Image Checker")
 
         # Font (you said everyone has it installed)
         self.base_font = self._pick_font(("FS Me", "FSMe", "FSMe-Regular"))
@@ -41,6 +42,7 @@ class DuplicateCheckerApp(tk.Tk):
 
         self._apply_style()
         self._build_ui()
+        self._enable_drag_and_drop()
 
     def _pick_font(self, candidates):
         # Use self to ensure Tk is fully initialised (helps with Automator launches)
@@ -156,7 +158,7 @@ class DuplicateCheckerApp(tk.Tk):
 
         ttk.Label(
             title_row,
-            text="Find repeated images fast for amends",
+            text="Find repeated / duplicate images in PDFs",
             style="SubHeader.TLabel",
         ).pack(side="left", padx=(10, 0))
 
@@ -222,6 +224,32 @@ class DuplicateCheckerApp(tk.Tk):
 
         self.preview_label = ttk.Label(preview_inner, style="App.TLabel")
         self.preview_label.pack(fill="both", expand=True, padx=12, pady=12)
+
+    def _enable_drag_and_drop(self):
+        # Allow dropping files anywhere on the window
+        self.drop_target_register(DND_FILES)
+        self.dnd_bind("<<Drop>>", self.on_drop)
+
+    def on_drop(self, event):
+        # event.data may look like:
+        #   "{/path/to/file.pdf}" OR "/path/to/file.pdf"
+        # and sometimes multiple files are space-separated
+        data = event.data.strip()
+
+        # Split possible multiple paths
+        paths = self.tk.splitlist(data)
+
+        # Take the first dropped file
+        path = paths[0]
+        if path.startswith("{") and path.endswith("}"):
+            path = path[1:-1]
+
+        if path.lower().endswith(".pdf"):
+            self.pdf_path = path
+            self.path_label.config(text=os.path.basename(path))
+            self.status.config(text="Ready (dropped PDF)")
+        else:
+            messagebox.showinfo("Unsupported file", "Please drop a PDF file.")
 
     def choose_pdf(self):
         path = filedialog.askopenfilename(
