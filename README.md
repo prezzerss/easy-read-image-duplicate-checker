@@ -1,4 +1,4 @@
-# AI Duplicate Image Checker (Easy Read Online)
+# The D.I.G - Duplicate Image Getter
 
 A desktop tool that detects repeated images across PDF and Pages documents using AI image embeddings.
 
